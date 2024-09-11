@@ -6,7 +6,7 @@
 /*   By: yussato <yussato@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 17:23:04 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/11 19:03:21 by yussato          ###   ########.fr       */
+/*   Updated: 2024/09/11 19:05:48 by yussato          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <pthread.h>
 # include <string.h>
 # include <sys/time.h>
-# include "channel.h"
+# include "lib.h"
 
 typedef struct s_config
 {
@@ -39,10 +39,6 @@ typedef struct s_philo
 	pthread_mutex_t	*state_mutex;
 	int				*state;
 }	t_philo;
-
-int			ft_atoi(const char *str);
-void		ft_putstr_fd(const char *str, int fd);
-size_t		ft_strlen(const char *str);
 
 long		getms(void);
 

@@ -6,7 +6,7 @@
 #    By: yussato <yussato@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/30 23:19:07 by yushsato          #+#    #+#              #
-#    Updated: 2024/09/11 19:03:43 by yussato          ###   ########.fr        #
+#    Updated: 2024/09/11 19:06:27 by yussato          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,9 @@ SRCS	= ./lib/channel/channel.c \
 		  ./util/getms.c \
 		  ./util/usage.c
 OBJS	= $(SRCS:.c=.o)
-INCLUDE	= -I./include -I./lib/channel/include
+INCLUDE	= -I./include \
+		  -I./lib/include \
+		  -I./lib/channel/include
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
