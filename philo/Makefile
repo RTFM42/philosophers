@@ -6,18 +6,21 @@
 #    By: yussato <yussato@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/30 23:19:07 by yushsato          #+#    #+#              #
-#    Updated: 2024/09/11 19:06:27 by yussato          ###   ########.fr        #
+#    Updated: 2024/09/13 16:52:38 by yussato          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= philo
 CC		= cc
 CFLAGS	= -Wall -Wextra -Werror
-SRCS	= ./lib/channel/channel.c \
+SRCS	= ./forks.c \
+		  ./lib/channel/channel.c \
 		  ./lib/ft_atoi.c \
 		  ./lib/ft_putstr_fd.c \
 		  ./lib/ft_strlen.c \
 		  ./main.c \
+		  ./philos.c \
+		  ./start.c \
 		  ./util/config.c \
 		  ./util/getms.c \
 		  ./util/usage.c

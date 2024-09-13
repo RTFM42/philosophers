@@ -6,11 +6,11 @@
 /*   By: yussato <yussato@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 18:36:16 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/11 18:58:47 by yussato          ###   ########.fr       */
+/*   Updated: 2024/09/13 16:52:03 by yussato          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../include/philo.h"
 
 void	putusage(const char *fname);
 

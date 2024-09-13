@@ -1,23 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   forks.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yussato <yussato@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/11 17:21:45 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/13 16:50:36 by yussato          ###   ########.fr       */
+/*   Created: 2024/09/13 16:00:49 by yussato           #+#    #+#             */
+/*   Updated: 2024/09/13 16:09:38 by yussato          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/philo.h"
 
-int	main(int ac, char *av[])
+pthread_mutex_t	*forks_create(int num)
 {
-	t_config	*cfg;
+	pthread_mutex_t	*forks;
 
-	cfg = config_create(ac, av);
-	if (!cfg)
-		return (1);
-	return (start(cfg));
+	forks = malloc(sizeof(pthread_mutex_t) * (num + 1));
+	if (!forks)
+		return (NULL);
+	memset(forks, 0, sizeof(pthread_mutex_t) * (num + 1));
+	if (!forks)
+		return (NULL);
+	while (num--)
+		pthread_mutex_init(&forks[num], NULL);
+	return (forks);
+}
+
+void	forks_destroy(pthread_mutex_t *forks, int num)
+{
+	while (num--)
+		pthread_mutex_destroy(&forks[num]);
+	free(forks);
 }

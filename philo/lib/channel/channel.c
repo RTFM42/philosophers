@@ -6,7 +6,7 @@
 /*   By: yussato <yussato@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 17:44:59 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/11 18:56:33 by yussato          ###   ########.fr       */
+/*   Updated: 2024/09/13 16:15:51 by yussato          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ t_channel	*channel_create(void *data, size_t type_size)
 
 t_channel	*channel_destroy(t_channel *channel)
 {
+	if (!channel)
+		return (NULL);
 	pthread_mutex_destroy(&channel->mutex);
 	free(channel->data);
 	free(channel);
