@@ -6,7 +6,7 @@
 /*   By: yussato <yussato@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 17:23:04 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/13 16:40:34 by yussato          ###   ########.fr       */
+/*   Updated: 2024/09/13 17:24:18 by yussato          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,7 @@ typedef struct s_philo
 	t_channel		die;
 }	t_philo;
 
-long		getms(void);
-
+long			getms(void);
 t_config		*config_create(int ac, char *av[]);
 pthread_mutex_t	*forks_create(int num);
 void			forks_destroy(pthread_mutex_t *forks, int num);

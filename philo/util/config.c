@@ -6,7 +6,7 @@
 /*   By: yussato <yussato@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 18:36:16 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/13 16:52:03 by yussato          ###   ########.fr       */
+/*   Updated: 2024/09/13 17:26:49 by yussato          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static int	is_valid_args(int ac, char *av[])
 
 t_config	*config_create(int ac, char *av[])
 {
-	t_config *config;
+	t_config	*config;
 
 	config = (t_config *)malloc(sizeof(t_config));
 	memset(config, 0, sizeof(t_config));

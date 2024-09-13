@@ -6,7 +6,7 @@
 /*   By: yussato <yussato@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:16:47 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/13 16:40:02 by yussato          ###   ########.fr       */
+/*   Updated: 2024/09/13 17:24:36 by yussato          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ pthread_t	*philos_destroy(pthread_t *threads)
 
 t_philo	*philos_data_create(t_config *cfg, t_channel *die)
 {
-	pthread_mutex_t *forks;
+	pthread_mutex_t	*forks;
 	t_philo			*philos;
 	int				num;
 

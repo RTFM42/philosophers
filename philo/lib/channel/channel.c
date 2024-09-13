@@ -6,7 +6,7 @@
 /*   By: yussato <yussato@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 17:44:59 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/13 16:15:51 by yussato          ###   ########.fr       */
+/*   Updated: 2024/09/13 17:26:59 by yussato          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	channel_send(t_channel *channel, void *data)
 	if (channel && !pthread_mutex_lock(&channel->mutex))
 	{
 		ch_memcpy(channel->data, data, channel->type_size);
-		pthread_mutex_unlock(&channel->mutex);	
+		pthread_mutex_unlock(&channel->mutex);
 	}
 	else
 		return (1);
