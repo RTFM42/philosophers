@@ -6,15 +6,17 @@
 /*   By: yussato <yussato@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:31:38 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/13 17:25:22 by yussato          ###   ########.fr       */
+/*   Updated: 2024/09/14 21:42:49 by yussato          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/philo.h"
 
+
+
 void	*routine(t_philo *philo)
 {
-	(void)philo;
+	
 	return (NULL);
 }
 
