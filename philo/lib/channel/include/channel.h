@@ -6,7 +6,7 @@
 /*   By: yussato <yussato@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 17:46:12 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/11 18:52:13 by yussato          ###   ########.fr       */
+/*   Updated: 2024/09/17 19:43:18 by yussato          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ typedef struct s_channel
 {
 	void			*data;
 	unsigned int	type_size;
-	pthread_mutex_t	mutex;
+	pthread_mutex_t	*mutex;
 }	t_channel;
 
 t_channel	*channel_create(void *data, size_t type_size);
