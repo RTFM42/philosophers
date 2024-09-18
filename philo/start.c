@@ -6,7 +6,7 @@
 /*   By: yussato <yussato@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:31:38 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/19 01:22:35 by yussato          ###   ########.fr       */
+/*   Updated: 2024/09/19 01:24:12 by yussato          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ int	have_a_meal(int id, long start_at, t_philo *philo, t_channel last_meal)
 	channel_send(last_meal, (long []){now + philo->config.dur_eat});
 	usleep(philo->config.dur_eat * 1000);
 	channel_send(last_meal, (long []){now + philo->config.dur_eat});
+	channel_send(*philo->lfork, (int []){0});
+	channel_send(*philo->rfork, (int []){0});
 	return (0);
 }
 
