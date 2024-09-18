@@ -6,7 +6,7 @@
 /*   By: yussato <yussato@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:16:47 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/18 00:27:20 by yussato          ###   ########.fr       */
+/*   Updated: 2024/09/19 01:06:00 by yussato          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ pthread_t	*philos_destroy(pthread_t *threads)
 	return (NULL);
 }
 
-t_philo	*philos_data_create_2(t_config *cfg, t_channel *die)
+t_philo	*philos_data_create_2(t_config *cfg, t_channel die)
 {
-	pthread_mutex_t	*forks;
-	t_philo			*philos;
-	int				num;
+	t_channel	*forks;
+	t_philo		*philos;
+	int			num;
 
 	num = cfg->num;
 	if (num < 1)
@@ -53,14 +53,14 @@ t_philo	*philos_data_create_2(t_config *cfg, t_channel *die)
 		philos[num].config = *cfg;
 		philos[num].lfork = &forks[num];
 		philos[num].rfork = &forks[0];
-		philos[num].die = *die;
+		philos[num].die = die;
 		if (num + 1 < cfg->num)
 			philos[num].rfork = &forks[(num + 1)];
 	}
 	return (philos);
 }
 
-t_philo	*philos_data_create(t_config *cfg, t_channel *die)
+t_philo	*philos_data_create(t_config *cfg, t_channel die)
 {
 	t_philo	*philos;
 	long	start_at;
@@ -82,7 +82,7 @@ t_philo	*philos_data_destroy(t_philo *philos)
 	{
 		num = philos->config.num;
 		while (num--)
-			pthread_mutex_destroy(philos[num].lfork);
+			channel_destroy(*philos[num].lfork);
 		free(philos->lfork);
 		free(philos);
 	}

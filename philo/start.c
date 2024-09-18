@@ -6,7 +6,7 @@
 /*   By: yussato <yussato@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:31:38 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/18 18:24:55 by yussato          ###   ########.fr       */
+/*   Updated: 2024/09/19 01:22:35 by yussato          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,25 @@ int	die_check(t_philo *philo)
 {
 	int	die;
 
-	channel_recv(&philo->die, &die);
+	channel_recv(philo->die, &die);
 	return (die);
 }
 
 int	take_the_left_fork(int id, long start_at, t_philo *philo)
 {
 	long	now;
+	int		fork_id;
 
-	if (die_check(philo))
-		return (1);
-	pthread_mutex_lock(philo->lfork);
+	while (1)
+	{
+		if (die_check(philo))
+			return (1);
+		channel_recv(*philo->lfork, &fork_id);
+		if (fork_id == 0)
+			break ;
+		usleep(100);
+	}
+	channel_send(*philo->lfork, (int []){id});
 	now = getms() - start_at;
 	if (die_check(philo))
 		return (1);
@@ -37,10 +45,18 @@ int	take_the_left_fork(int id, long start_at, t_philo *philo)
 int	take_the_right_fork(int id, long start_at, t_philo *philo)
 {
 	long	now;
+	int		fork_id;
 
-	if (die_check(philo))
-		return (1);
-	pthread_mutex_lock(philo->rfork);
+	while (1)
+	{
+		if (die_check(philo))
+			return (1);
+		channel_recv(*philo->rfork, &fork_id);
+		if (fork_id == 0)
+			break ;
+		usleep(100);
+	}
+	channel_send(*philo->rfork, (int []){id});
 	now = getms() - start_at;
 	if (die_check(philo))
 		return (1);
@@ -48,20 +64,15 @@ int	take_the_right_fork(int id, long start_at, t_philo *philo)
 	return (0);
 }
 
-int	have_a_meal(int id, long start_at, t_philo *philo, t_channel *last_meal)
+int	have_a_meal(int id, long start_at, t_philo *philo, t_channel last_meal)
 {
 	const long	now = getms();
 
 	if (die_check(philo))
-	{
-		pthread_mutex_unlock(philo->lfork);
-		pthread_mutex_unlock(philo->rfork);
 		return (1);
-	}
 	printf("%ld %d is eating\n", now - start_at, id);
+	channel_send(last_meal, (long []){now + philo->config.dur_eat});
 	usleep(philo->config.dur_eat * 1000);
-	pthread_mutex_unlock(philo->lfork);
-	pthread_mutex_unlock(philo->rfork);
 	channel_send(last_meal, (long []){now + philo->config.dur_eat});
 	return (0);
 }
@@ -91,9 +102,11 @@ void	*sub_routine(t_philo_sub *sub)
 			break ;
 		if (now - last_meal > sub->philo.config.dur_die)
 		{
-			channel_send(&sub->philo.die, (int []){sub->philo.id});
-			usleep(10000);
-			channel_recv(&sub->philo.die, &die);
+			channel_recv(sub->philo.die, &die);
+			if (die != 0)
+				break ;
+			channel_send(sub->philo.die, (int []){sub->philo.id});
+			channel_recv(sub->philo.die, &die);
 			if (die == sub->philo.id)
 				printf("%ld %d died\n", now - sub->start_at, sub->philo.id);
 			break ;
@@ -131,21 +144,21 @@ void	*routine(t_philo *philo)
 
 int	start(t_config *cfg)
 {
-	t_channel	*die;
+	t_channel	die;
 	pthread_t	*philos;
 	t_philo		*data;
 	int			num;
 
 	num = cfg->num;
 	die = channel_create((int []){0}, sizeof(int));
-	if (!die)
-		return (1);
+	if (!die.data || !die.mutex)
+		return (!channel_destroy(die));
 	philos = philos_create(cfg->num);
 	if (!philos)
-		return (!channel_destroy(die) * 0 + 1);
+		return (!channel_destroy(die));
 	data = philos_data_create(cfg, die);
 	if (!data)
-		return (!philos_destroy(philos) * !channel_destroy(die) * 0 + 1);
+		return (!philos_destroy(philos) * channel_destroy(die) + 1);
 	while (num--)
 		pthread_create(&philos[num], 0, (void *)(void *)routine, &data[num]);
 	num = cfg->num;
@@ -153,7 +166,7 @@ int	start(t_config *cfg)
 		pthread_join(philos[num], NULL);
 	data = philos_data_destroy(data);
 	philos = philos_destroy(philos);
-	die = channel_destroy(die);
+	channel_destroy(die);
 	free(cfg);
 	return (0);
 }
