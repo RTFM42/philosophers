@@ -6,7 +6,7 @@
 /*   By: yushsato <yushsato@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 18:36:16 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/19 20:54:49 by yushsato         ###   ########.fr       */
+/*   Updated: 2024/09/19 23:01:18 by yushsato         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,10 @@ t_config	*config_create(int ac, char *av[])
 	config = (t_config *)malloc(sizeof(t_config));
 	memset(config, 0, sizeof(t_config));
 	if (!is_valid_args(ac, av))
+	{
+		free(config);
 		return (NULL);
+	}
 	if (config == NULL)
 		return (NULL);
 	config->num = ft_atoi(av[1]);

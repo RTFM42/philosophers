@@ -6,11 +6,12 @@
 /*   By: yushsato <yushsato@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:31:38 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/19 20:55:27 by yushsato         ###   ########.fr       */
+/*   Updated: 2024/09/19 22:52:41 by yushsato         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/philo.h"
+#include "errno.h"
 
 void	*sub_routine(t_philo_sub *sub)
 {
@@ -70,6 +71,11 @@ void	*routine(t_philo *philo)
 int	end(t_philo *data, pthread_t *philos,
 			t_channel die, t_channel mst_eat_done)
 {
+	int	num;
+
+	num = data->config.num;
+	while (num--)
+		pthread_join(philos[num], NULL);
 	if (data)
 		data = philos_data_destroy(data);
 	if (philos)
@@ -99,10 +105,9 @@ int	start(t_config *cfg)
 	if (!data)
 		return (!end(data, philos, die, mst_eat_done));
 	while (num--)
-		pthread_create(&philos[num], 0, (void *)(void *)routine, &data[num]);
-	num = cfg->num;
-	while (num--)
-		pthread_join(philos[num], NULL);
+		if (pthread_create(&philos[num], 0,
+				(void *)(void *)routine, &data[num]))
+			channel_send(die, (int []){num + 2});
 	end(data, philos, die, mst_eat_done);
 	free(cfg);
 	return (0);
