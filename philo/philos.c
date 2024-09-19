@@ -6,7 +6,7 @@
 /*   By: yussato <yussato@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:16:47 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/19 01:06:00 by yussato          ###   ########.fr       */
+/*   Updated: 2024/09/19 20:27:35 by yussato          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ t_philo	*philos_data_create_2(t_config *cfg, t_channel die)
 	return (philos);
 }
 
-t_philo	*philos_data_create(t_config *cfg, t_channel die)
+t_philo	*philos_data_create(
+	t_config *cfg, t_channel die, t_channel mst_eat_done)
 {
 	t_philo	*philos;
 	long	start_at;
@@ -70,7 +71,10 @@ t_philo	*philos_data_create(t_config *cfg, t_channel die)
 	start_at = getms() + cfg->num * 20;
 	num = cfg->num;
 	while (num--)
+	{
 		philos[num].start_at = start_at;
+		philos[num].mst_eat_done = mst_eat_done;
+	}
 	return (philos);
 }
 

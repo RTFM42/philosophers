@@ -6,7 +6,7 @@
 /*   By: yussato <yussato@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:23:45 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/19 18:24:07 by yussato          ###   ########.fr       */
+/*   Updated: 2024/09/19 20:29:43 by yussato          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,31 +64,29 @@ int	take_the_right_fork(int id, long start_at, t_philo *philo)
 	return (0);
 }
 
-int	have_a_meal(
-	long start_at, t_philo *philo, t_channel last_meal, int *eat)
+int	have_a_meal(t_philo_sub *sub, int *eat)
 {
 	const long	now = getms();
+	int			mst_eat_done;
 
-	if (philo->config.mst_eat > -1 && *eat == philo->config.mst_eat)
-	{
-		channel_send(philo->die, (int []){philo->id});
+	if (die_check(&sub->philo))
 		return (1);
-	}
-	if (die_check(philo))
-		return (1);
-	printf("%ld %d is eating\n", getms() - start_at, philo->id);
-	channel_send(last_meal, (long []){now + philo->config.dur_eat});
-	usleep(philo->config.dur_eat * 1000);
-	channel_send(last_meal, (long []){now + philo->config.dur_eat});
-	channel_send(*philo->lfork, (int []){0});
-	channel_send(*philo->rfork, (int []){0});
-	if (philo->config.mst_eat > -1)
+	printf("%ld %d is eating\n", getms() - sub->start_at, sub->philo.id);
+	channel_send(sub->last_meal, (long []){now + sub->philo.config.dur_eat});
+	usleep(sub->philo.config.dur_eat * 1000);
+	channel_send(sub->last_meal, (long []){now + sub->philo.config.dur_eat});
+	channel_send(*sub->philo.lfork, (int []){0});
+	channel_send(*sub->philo.rfork, (int []){0});
+	if (sub->philo.config.mst_eat > -1 && ++(*eat))
 	{
-		(*eat)++;
-		if (*eat == philo->config.mst_eat)
+		if (*eat == sub->philo.config.mst_eat)
 		{
-			channel_send(philo->die, (int []){philo->config.num + 2});
-			return (1);
+			channel_recv(sub->philo.mst_eat_done, &mst_eat_done);
+			mst_eat_done++;
+			channel_send(sub->philo.mst_eat_done, &mst_eat_done);
+			if (mst_eat_done == sub->philo.config.num)
+				return (channel_send(sub->philo.die,
+						(int []){sub->philo.config.num + 2}) * 0 + 1);
 		}
 	}
 	return (0);

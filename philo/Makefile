@@ -6,7 +6,7 @@
 #    By: yussato <yussato@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/30 23:19:07 by yushsato          #+#    #+#              #
-#    Updated: 2024/09/19 18:28:28 by yussato          ###   ########.fr        #
+#    Updated: 2024/09/19 20:46:09 by yussato          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ SRCS	= forks.c \
 		  lib/ft_putstr_fd.c \
 		  lib/ft_strlen.c \
 		  lib/ft_atoi.c \
+		  lib/channel/safe.c \
 		  lib/channel/channel.c
 OBJS	= $(SRCS:.c=.o)
 INCLUDE	= -I./include \
