@@ -2,3 +2,4 @@
 /**/*.o
 /*.out
 /philo/philo
+/**/.DS_Store
