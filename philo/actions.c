@@ -6,7 +6,7 @@
 /*   By: yushsato <yushsato@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:23:45 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/19 20:54:58 by yushsato         ###   ########.fr       */
+/*   Updated: 2024/09/19 21:32:12 by yushsato         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,10 @@ int	have_a_meal(t_philo_sub *sub, int *eat)
 	{
 		if (*eat == sub->philo.config.mst_eat)
 		{
-			channel_recv(sub->philo.mst_eat_done, &mst_eat_done);
-			mst_eat_done++;
-			channel_send(sub->philo.mst_eat_done, &mst_eat_done);
+			pthread_mutex_lock(sub->philo.mst_eat_done.mutex);
+			(*(int *)sub->philo.mst_eat_done.data)++;
+			mst_eat_done = *(int *)sub->philo.mst_eat_done.data;
+			pthread_mutex_unlock(sub->philo.mst_eat_done.mutex);
 			if (mst_eat_done == sub->philo.config.num)
 				return (channel_send(sub->philo.die,
 						(int []){sub->philo.config.num + 2}) * 0 + 1);
