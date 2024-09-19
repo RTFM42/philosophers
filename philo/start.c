@@ -6,7 +6,7 @@
 /*   By: yussato <yussato@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:31:38 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/19 16:42:04 by yussato          ###   ########.fr       */
+/*   Updated: 2024/09/19 18:17:24 by yussato          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,16 @@ int	take_the_right_fork(int id, long start_at, t_philo *philo)
 	return (0);
 }
 
-int	have_a_meal(int id, long start_at, t_philo *philo, t_channel last_meal)
+int	have_a_meal(
+	int id, long start_at, t_philo *philo, t_channel last_meal, int *eat)
 {
 	const long	now = getms();
 
+	if (philo->config.mst_eat > -1 && *eat == philo->config.mst_eat)
+	{
+		channel_send(philo->die, (int []){id});
+		return (1);
+	}
 	if (die_check(philo))
 		return (1);
 	printf("%ld %d is eating\n", getms() - start_at, id);
@@ -76,6 +82,15 @@ int	have_a_meal(int id, long start_at, t_philo *philo, t_channel last_meal)
 	channel_send(last_meal, (long []){now + philo->config.dur_eat});
 	channel_send(*philo->lfork, (int []){0});
 	channel_send(*philo->rfork, (int []){0});
+	if (philo->config.mst_eat > -1)
+	{
+		(*eat)++;
+		if (*eat == philo->config.mst_eat)
+		{
+			channel_send(philo->die, (int []){philo->config.num + 2});
+			return (1);
+		}
+	}
 	return (0);
 }
 
@@ -130,6 +145,7 @@ void	*routine(t_philo *philo)
 {
 	pthread_t	p_sub;
 	t_philo_sub sub;
+	int			eat;
 
 	sub.philo = *philo;
 	sub.start_at = philo->start_at;
@@ -141,10 +157,11 @@ void	*routine(t_philo *philo)
 	if (philo->id % 2 == 0)
 		usleep(500);
 	pthread_create(&p_sub, NULL, (void *)(void *)sub_routine, &sub);
+	eat = 0;
 	while (1)
 		if (take_the_left_fork(philo->id, philo->start_at, philo)
 			|| take_the_right_fork(philo->id, philo->start_at, philo)
-			|| have_a_meal(philo->id, philo->start_at, philo, sub.last_meal)
+			|| have_a_meal(philo->id, philo->start_at, philo, sub.last_meal, &eat)
 			|| get_sleep(philo->id, philo->start_at, philo))
 			break ;
 	pthread_join(p_sub, NULL);
