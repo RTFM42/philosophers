@@ -6,7 +6,7 @@
 /*   By: yussato <yussato@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:31:38 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/19 01:24:12 by yussato          ###   ########.fr       */
+/*   Updated: 2024/09/19 16:42:04 by yussato          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	have_a_meal(int id, long start_at, t_philo *philo, t_channel last_meal)
 
 	if (die_check(philo))
 		return (1);
-	printf("%ld %d is eating\n", now - start_at, id);
+	printf("%ld %d is eating\n", getms() - start_at, id);
 	channel_send(last_meal, (long []){now + philo->config.dur_eat});
 	usleep(philo->config.dur_eat * 1000);
 	channel_send(last_meal, (long []){now + philo->config.dur_eat});
@@ -81,12 +81,17 @@ int	have_a_meal(int id, long start_at, t_philo *philo, t_channel last_meal)
 
 int	get_sleep(int id, long start_at, t_philo *philo)
 {
-	const long	now = getms() - start_at;
-	
+	long	now;
+
+	now = getms() - start_at;
 	if (die_check(philo))
 		return (1);
 	printf("%ld %d is sleeping\n", now, id);
 	usleep(philo->config.dur_slp * 1000);
+	if (die_check(philo))
+		return (1);
+	now = getms() - start_at;
+	printf("%ld %d is thinking\n", now, id);
 	return (0);
 }
 
@@ -110,7 +115,10 @@ void	*sub_routine(t_philo_sub *sub)
 			channel_send(sub->philo.die, (int []){sub->philo.id});
 			channel_recv(sub->philo.die, &die);
 			if (die == sub->philo.id)
+			{
+				usleep(100000);
 				printf("%ld %d died\n", now - sub->start_at, sub->philo.id);
+			}
 			break ;
 		}
 		usleep(500);
@@ -126,13 +134,13 @@ void	*routine(t_philo *philo)
 	sub.philo = *philo;
 	sub.start_at = philo->start_at;
 	sub.last_meal = channel_create(&philo->start_at, sizeof(long));
-	pthread_create(&p_sub, NULL, (void *)(void *)sub_routine, &sub);
 	while (philo->start_at > getms())
 		usleep(500);
 	if (philo->id != 1)
 		usleep(500);
 	if (philo->id % 2 == 0)
 		usleep(500);
+	pthread_create(&p_sub, NULL, (void *)(void *)sub_routine, &sub);
 	while (1)
 		if (take_the_left_fork(philo->id, philo->start_at, philo)
 			|| take_the_right_fork(philo->id, philo->start_at, philo)
