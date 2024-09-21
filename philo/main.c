@@ -6,7 +6,7 @@
 /*   By: yushsato <yushsato@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 17:21:45 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/22 06:13:46 by yushsato         ###   ########.fr       */
+/*   Updated: 2024/09/22 06:35:39 by yushsato         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ int	main(int ac, char *av[])
 	cfg = config_create(ac, av);
 	if (!cfg)
 		return (1);
-	if (!start(cfg))
+	if (start(cfg))
 	{
 		free(cfg);
 		return (1);
 	}
 	free(cfg);
-	return (1);
+	return (0);
 }

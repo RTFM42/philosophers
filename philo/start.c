@@ -6,7 +6,7 @@
 /*   By: yushsato <yushsato@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:31:38 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/22 06:27:51 by yushsato         ###   ########.fr       */
+/*   Updated: 2024/09/22 06:33:43 by yushsato         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,5 +123,7 @@ int	start(t_config *cfg)
 		}
 		num++;
 	}
+	while (num--)
+		pthread_join(philos[num], NULL);
 	return (destroys(die, mst_eat_done, philos, data));
 }
