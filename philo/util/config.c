@@ -6,7 +6,7 @@
 /*   By: yushsato <yushsato@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 18:36:16 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/19 23:12:31 by yushsato         ###   ########.fr       */
+/*   Updated: 2024/09/22 06:51:39 by yushsato         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,10 @@ t_config	*config_create(int ac, char *av[])
 	config->mst_eat = -1;
 	if (ac == 6)
 		config->mst_eat = ft_atoi(av[5]);
-	if (config->num > 400)
+	if (config->num > 400 || config->mst_eat == 0)
 	{
 		free(config);
-		ft_putstr_fd("Error: Must be less than 400 philo.\n", 2);
+		ft_putstr_fd("Invalid arguments.\n", 2);
 		return (NULL);
 	}
 	return (config);
