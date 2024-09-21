@@ -6,7 +6,7 @@
 /*   By: yushsato <yushsato@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 18:36:16 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/22 06:51:39 by yushsato         ###   ########.fr       */
+/*   Updated: 2024/09/22 06:59:53 by yushsato         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,17 @@ static int	is_valid_args(int ac, char *av[])
 	if (!is_nbr(av[1]) || !is_nbr(av[2]) || !is_nbr(av[3]) || !is_nbr(av[4])
 		|| (ac == 6 && !is_nbr(av[5])))
 	{
-		ft_putstr_fd("Error: Arguments must be positive integers.\n", 2);
+		ft_putstr_fd("Invalid arguments.\n", 2);
 		return (0);
 	}
 	return (1);
+}
+
+void	*config_err(t_config *config)
+{
+	free(config);
+	ft_putstr_fd("Invalid arguments.\n", 2);
+	return (NULL);
 }
 
 t_config	*config_create(int ac, char *av[])
@@ -63,11 +70,9 @@ t_config	*config_create(int ac, char *av[])
 	config->mst_eat = -1;
 	if (ac == 6)
 		config->mst_eat = ft_atoi(av[5]);
-	if (config->num > 400 || config->mst_eat == 0)
-	{
-		free(config);
-		ft_putstr_fd("Invalid arguments.\n", 2);
-		return (NULL);
-	}
+	if (config->num <= 0 || config->num >= 300 || config->dur_die <= 0
+		|| config->dur_eat <= 0 || config->dur_slp <= 0
+		|| (ac == 6 && config->mst_eat <= 0))
+		return (config_err(config));
 	return (config);
 }
