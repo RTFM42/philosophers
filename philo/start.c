@@ -6,7 +6,7 @@
 /*   By: yushsato <yushsato@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:31:38 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/22 06:33:43 by yushsato         ###   ########.fr       */
+/*   Updated: 2024/09/22 06:41:15 by yushsato         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,11 +90,18 @@ int	destroys(
 	t_channel die, t_channel mst_eat_done,
 	pthread_t *philos, t_philo *data)
 {
+	int	ret;
+
+	channel_recv(die, &ret);
+	if (ret == -1)
+		ret = 1;
+	else
+		ret = 0;
 	channel_destroy(die);
 	channel_destroy(mst_eat_done);
 	philos_destroy(philos);
 	philos_data_destroy(data);
-	return (0);
+	return (ret);
 }
 
 int	start(t_config *cfg)
@@ -116,10 +123,8 @@ int	start(t_config *cfg)
 		if (pthread_create(
 				&philos[num], 0, (void *)(void *)routine, &data[num]))
 		{
-			channel_send(die, (int []){num + 2});
-			while (num--)
-				pthread_join(philos[num], NULL);
-			return (!destroys(die, mst_eat_done, philos, data));
+			channel_send(die, (int []){-1});
+			break ;
 		}
 		num++;
 	}
