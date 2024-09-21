@@ -6,7 +6,7 @@
 /*   By: yushsato <yushsato@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:31:38 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/19 23:08:33 by yushsato         ###   ########.fr       */
+/*   Updated: 2024/09/22 06:27:51 by yushsato         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,20 +68,32 @@ void	*routine(t_philo *philo)
 	return (NULL);
 }
 
-int	end(t_philo *data, pthread_t *philos,
-			t_channel die, t_channel mst_eat_done)
+int	start_init(
+	t_config *cfg, t_channel *die,
+	t_channel *mst_eat_done, pthread_t **philos)
 {
-	int	num;
+	if (!channel_safe_create(die, (int []){0}, sizeof(int)))
+		return (1);
+	if (!channel_safe_create(mst_eat_done, (int []){0}, sizeof(int)))
+		return (!channel_destroy(*die));
+	*philos = philos_create(cfg->num);
+	if (!philos)
+	{
+		channel_destroy(*die);
+		channel_destroy(*mst_eat_done);
+		return (1);
+	}
+	return (0);
+}
 
-	num = data->config.num;
-	while (num--)
-		pthread_join(philos[num], NULL);
-	if (data)
-		data = philos_data_destroy(data);
-	if (philos)
-		philos = philos_destroy(philos);
+int	destroys(
+	t_channel die, t_channel mst_eat_done,
+	pthread_t *philos, t_philo *data)
+{
 	channel_destroy(die);
 	channel_destroy(mst_eat_done);
+	philos_destroy(philos);
+	philos_data_destroy(data);
 	return (0);
 }
 
@@ -93,34 +105,11 @@ int	start(t_config *cfg)
 	t_philo		*data;
 	int			num;
 
-	if (!channel_safe_create(&die, (int []){0}, sizeof(int)))
-	{
-		free(cfg);
+	if (start_init(cfg, &die, &mst_eat_done, &philos))
 		return (1);
-	}
-	if (!channel_safe_create(&mst_eat_done, (int []){0}, sizeof(int)))
-	{
-		channel_destroy(die);
-		free(cfg);
-		return (1);
-	}
-	philos = philos_create(cfg->num);
-	if (!philos)
-	{
-		channel_destroy(die);
-		channel_destroy(mst_eat_done);
-		free(cfg);
-		return (1);
-	}
 	data = philos_data_create(cfg, die, mst_eat_done);
 	if (!data)
-	{
-		channel_destroy(die);
-		channel_destroy(mst_eat_done);
-		philos_destroy(philos);
-		free(cfg);
-		return (1);
-	}
+		return (!destroys(die, mst_eat_done, philos, data));
 	num = 0;
 	while (num < cfg->num)
 	{
@@ -130,19 +119,9 @@ int	start(t_config *cfg)
 			channel_send(die, (int []){num + 2});
 			while (num--)
 				pthread_join(philos[num], NULL);
-			channel_destroy(die);
-			channel_destroy(mst_eat_done);
-			philos_data_destroy(data);
-			philos_destroy(philos);
-			free(cfg);
-			return (1);
+			return (!destroys(die, mst_eat_done, philos, data));
 		}
 		num++;
 	}
-	channel_destroy(die);
-	channel_destroy(mst_eat_done);
-	philos_data_destroy(data);
-	philos_destroy(philos);
-	free(cfg);
-	return (0);
+	return (destroys(die, mst_eat_done, philos, data));
 }
