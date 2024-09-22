@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yushsato <yushsato@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: nsakanou <nsakanou@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:23:45 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/19 21:32:12 by yushsato         ###   ########.fr       */
+/*   Updated: 2024/09/22 14:25:01 by nsakanou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,8 @@ int	have_a_meal(t_philo_sub *sub, int *eat)
 	if (die_check(&sub->philo))
 		return (1);
 	printf("%ld %d is eating\n", getms() - sub->start_at, sub->philo.id);
-	channel_send(sub->last_meal, (long []){now + sub->philo.config.dur_eat});
+	channel_send(sub->last_meal, (long []){now});
 	usleep(sub->philo.config.dur_eat * 1000);
-	channel_send(sub->last_meal, (long []){now + sub->philo.config.dur_eat});
 	channel_send(*sub->philo.lfork, (int []){0});
 	channel_send(*sub->philo.rfork, (int []){0});
 	if (sub->philo.config.mst_eat > -1 && ++(*eat))
