@@ -6,7 +6,7 @@
 /*   By: yushsato <yushsato@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 17:21:45 by yussato           #+#    #+#             */
-/*   Updated: 2024/09/22 14:01:52 by nsakanou         ###   ########.fr       */
+/*   Updated: 2024/09/22 14:01:52 by yushsato         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,4 +27,3 @@ int	main(int ac, char *av[])
 	free(cfg);
 	return (0);
 }
-
